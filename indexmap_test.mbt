@@ -302,3 +302,14 @@ test "keys and values arrays" {
   let values = m.values()
   debug_inspect(values, content="[1, 2, 3]")
 }
+
+///|
+test "extend" {
+  let m1 = @indexmap.IndexMap::from([("a", 1), ("b", 2)])
+  let m2 = @indexmap.IndexMap::from([("b", 20), ("c", 3)])
+  m1.extend(m2)
+  assert_eq(m1.length(), 3)
+  debug_inspect(m1.get("a"), content="Some(1)")
+  debug_inspect(m1.get("b"), content="Some(20)")
+  debug_inspect(m1.get("c"), content="Some(3)")
+}

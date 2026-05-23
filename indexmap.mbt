@@ -358,6 +358,18 @@ pub fn[K : Hash + Eq, V] IndexMap::retain(
   }
 }
 
+///|
+/// Extends this map with all entries from another map.
+/// For duplicate keys, the value from the other map overwrites this one.
+pub fn[K : Hash + Eq, V] IndexMap::extend(
+  self : IndexMap[K, V],
+  other : IndexMap[K, V],
+) -> Unit {
+  for kv in other {
+    self.set(kv.0, kv.1)
+  }
+}
+
 // ===================== index-based access =====================
 
 ///|
