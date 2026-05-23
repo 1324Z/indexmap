@@ -313,3 +313,15 @@ test "extend" {
   debug_inspect(m1.get("b"), content="Some(20)")
   debug_inspect(m1.get("c"), content="Some(3)")
 }
+
+///|
+test "capacity and shrink_to_fit" {
+  let m = @indexmap.IndexMap::with_capacity(64)
+  assert_true(m.capacity() >= 64)
+  m.set("a", 1)
+  m.set("b", 2)
+  m.shrink_to_fit()
+  assert_true(m.capacity() <= 16)
+  debug_inspect(m.get("a"), content="Some(1)")
+  debug_inspect(m.get("b"), content="Some(2)")
+}

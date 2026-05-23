@@ -396,6 +396,31 @@ pub fn[K, V] IndexMap::is_empty(self : IndexMap[K, V]) -> Bool {
 }
 
 ///|
+/// Returns the current capacity of the hash table.
+pub fn[K, V] IndexMap::capacity(self : IndexMap[K, V]) -> Int {
+  self.capacity
+}
+
+///|
+/// Shrinks the capacity to fit the current number of entries.
+pub fn[K : Hash + Eq, V] IndexMap::shrink_to_fit(self : IndexMap[K, V]) -> Unit {
+  let target_cap = (self.size * 2).max(default_capacity).next_power_of_two()
+  if target_cap < self.capacity {
+    let old_entries = self.entries
+    self.entries = FixedArray::make(target_cap, None)
+    self.capacity = target_cap
+    self.capacity_mask = target_cap - 1
+    self.size = 0
+    for entry in old_entries {
+      match entry {
+        None => ()
+        Some(slot) => self.insert_no_order(slot.hash, slot.key, slot.value)
+      }
+    }
+  }
+}
+
+///|
 /// Removes all entries from the map.
 pub fn[K, V] IndexMap::clear(self : IndexMap[K, V]) -> Unit {
   for i in 0..<self.capacity {
