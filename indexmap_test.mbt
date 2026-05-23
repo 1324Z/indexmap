@@ -247,3 +247,13 @@ test "get_mut" {
   debug_inspect(m.get_mut("a"), content="Some(1)")
   debug_inspect(m.get_mut("z"), content="None")
 }
+
+///|
+test "retain" {
+  let m = @indexmap.IndexMap::from([("a", 1), ("b", 2), ("c", 3), ("d", 4)])
+  m.retain(fn(_k, v) { v > 2 })
+  assert_eq(m.length(), 2)
+  debug_inspect(m.get("c"), content="Some(3)")
+  debug_inspect(m.get("d"), content="Some(4)")
+  debug_inspect(m.get("a"), content="None")
+}

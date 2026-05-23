@@ -341,6 +341,23 @@ fn[K, V] IndexMap::insert_no_order(
   }
 }
 
+///|
+/// Retains only the entries for which the predicate returns `true`.
+pub fn[K : Hash + Eq, V] IndexMap::retain(
+  self : IndexMap[K, V],
+  pred : (K, V) -> Bool,
+) -> Unit {
+  let keys_to_remove : Array[K] = []
+  for kv in self {
+    if !pred(kv.0, kv.1) {
+      keys_to_remove.push(kv.0)
+    }
+  }
+  for key in keys_to_remove {
+    let _ = self.remove(key)
+  }
+}
+
 // ===================== index-based access =====================
 
 ///|
