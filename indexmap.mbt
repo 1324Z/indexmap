@@ -281,6 +281,28 @@ pub fn[K : Hash + Eq, V] IndexMap::get_mut(
 ///   debug_inspect(keys, content="[\"a\", \"c\"]")
 /// }
 /// ```
+fn[K, V] shift_entries(
+  entries : FixedArray[Slot[K, V]?],
+  mask : Int,
+  start : Int,
+) -> Int {
+  for g = start {
+    let next = (g + 1) & mask
+    match entries[next] {
+      None => break g
+      Some(next_slot) => {
+        let ideal = next_slot.hash & mask
+        if ideal <= g || ideal > next {
+          entries[g] = entries[next]
+          continue next
+        } else {
+          break g
+        }
+      }
+    }
+  }
+}
+
 pub fn[K : Hash + Eq, V] IndexMap::remove(self : IndexMap[K, V], key : K) -> V? {
   let hash = key.hash()
   for i = 0, idx = hash & self.capacity_mask {
@@ -289,7 +311,9 @@ pub fn[K : Hash + Eq, V] IndexMap::remove(self : IndexMap[K, V], key : K) -> V? 
       Some(slot) =>
         if slot.hash == hash && slot.key == key {
           let value = slot.value
-          self.entries[idx] = None
+          // backward-shift to preserve probe chains
+          let gap = shift_entries(self.entries, self.capacity_mask, idx)
+          self.entries[gap] = None
           self.size -= 1
           // swap-remove from order
           for j = 0 {
