@@ -257,3 +257,21 @@ test "retain" {
   debug_inspect(m.get("d"), content="Some(4)")
   debug_inspect(m.get("a"), content="None")
 }
+
+///|
+test "first and last" {
+  let m = @indexmap.IndexMap::from([("a", 1), ("b", 2), ("c", 3)])
+  debug_inspect(m.first(), content="Some((\"a\", 1))")
+  debug_inspect(m.last(), content="Some((\"c\", 3))")
+  debug_inspect(m.first_key(), content="Some(\"a\")")
+  debug_inspect(m.last_key(), content="Some(\"c\")")
+}
+
+///|
+test "first and last on empty" {
+  let m : @indexmap.IndexMap[Int, Int] = @indexmap.IndexMap::new()
+  debug_inspect(m.first(), content="None")
+  debug_inspect(m.last(), content="None")
+  debug_inspect(m.first_key(), content="None")
+  debug_inspect(m.last_key(), content="None")
+}

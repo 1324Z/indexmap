@@ -430,6 +430,40 @@ pub fn[K, V] IndexMap::get_index_key(self : IndexMap[K, V], index : Int) -> K? {
   }
 }
 
+///|
+/// Returns the first key-value pair in insertion order.
+pub fn[K : Hash + Eq, V] IndexMap::first(self : IndexMap[K, V]) -> (K, V)? {
+  self.get_index(0)
+}
+
+///|
+/// Returns the last key-value pair in insertion order.
+pub fn[K : Hash + Eq, V] IndexMap::last(self : IndexMap[K, V]) -> (K, V)? {
+  let len = self.order.length()
+  if len == 0 {
+    None
+  } else {
+    self.get_index(len - 1)
+  }
+}
+
+///|
+/// Returns the first key in insertion order.
+pub fn[K, V] IndexMap::first_key(self : IndexMap[K, V]) -> K? {
+  self.get_index_key(0)
+}
+
+///|
+/// Returns the last key in insertion order.
+pub fn[K, V] IndexMap::last_key(self : IndexMap[K, V]) -> K? {
+  let len = self.order.length()
+  if len == 0 {
+    None
+  } else {
+    Some(self.order[len - 1])
+  }
+}
+
 // ===================== iteration =====================
 
 ///|
