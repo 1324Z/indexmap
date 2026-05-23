@@ -187,6 +187,47 @@ struct IndexMap[K, V] {
 
     pdf.body_text('测试结果：共 30 个测试，全部通过，0 个失败。')
 
+    pdf.subsection_title('7.1 测试分类统计')
+    pdf.table_row('类别', '测试数', bold=True)
+    pdf.table_row('基本操作', '6（new、from、set/get、overwrite、contains_key）')
+    pdf.table_row('删除操作', '3（remove、remove nonexistent、remove all）')
+    pdf.table_row('顺序保持', '3（insertion order、update preserves order、swap_remove）')
+    pdf.table_row('扩容', '2（grow on many 100、large map 1000）')
+    pdf.table_row('类型支持', '2（string keys、int keys）')
+    pdf.table_row('索引访问', '2（get_index、get_index_key/value）')
+    pdf.table_row('迭代器', '2（iter、empty map iter）')
+    pdf.table_row('相等性', '2（eq、eq different values）')
+    pdf.table_row('文档测试', '6（代码注释中的示例测试）')
+
+    pdf.ln(3)
+    pdf.subsection_title('7.2 测试详细结果')
+    pdf.body_text('所有测试均通过：')
+    pdf.bullet_point('"new empty map" ok')
+    pdf.bullet_point('"with_capacity" ok')
+    pdf.bullet_point('"from array" ok')
+    pdf.bullet_point('"set and get" ok')
+    pdf.bullet_point('"set overwrite" ok')
+    pdf.bullet_point('"bracket operator" ok')
+    pdf.bullet_point('"contains_key" ok')
+    pdf.bullet_point('"remove" ok')
+    pdf.bullet_point('"remove nonexistent" ok')
+    pdf.bullet_point('"remove all" ok')
+    pdf.bullet_point('"insertion order preserved" ok')
+    pdf.bullet_point('"iter" ok')
+    pdf.bullet_point('"get_index" ok')
+    pdf.bullet_point('"get_index_key and get_index_value" ok')
+    pdf.bullet_point('"update preserves order" ok')
+    pdf.bullet_point('"swap_remove preserves contiguity" ok')
+    pdf.bullet_point('"grow on many insertions" ok')
+    pdf.bullet_point('"string keys" ok')
+    pdf.bullet_point('"int keys" ok')
+    pdf.bullet_point('"from with duplicate keys" ok')
+    pdf.bullet_point('"large map correctness" ok')
+    pdf.bullet_point('"eq" ok')
+    pdf.bullet_point('"eq different values" ok')
+    pdf.bullet_point('"empty map iter" ok')
+    pdf.bullet_point('文档测试 #0-#5 共 6 个 ok')
+
     # 第八节：使用示例
     pdf.section_title('八、使用示例')
     pdf.code_block('''test {
@@ -264,7 +305,7 @@ struct IndexMap[K, V] {
     pdf.cell(0, 6, '方向：基础数据结构与算法', align='C')
 
     # 保存 PDF
-    output_path = 'E:/moonbit/indexmap/DECLARATION_NEW.pdf'
+    output_path = 'E:/moonbit/indexmap/DECLARATION_V2.pdf'
     pdf.output(output_path)
     print(f'PDF 生成成功: {output_path}')
 
