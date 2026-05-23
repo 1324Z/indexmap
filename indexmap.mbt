@@ -517,6 +517,12 @@ pub fn[K, V] IndexMap::keys_iter(self : IndexMap[K, V]) -> Iter[K] {
 }
 
 ///|
+/// Returns an array of all keys in insertion order.
+pub fn[K, V] IndexMap::keys(self : IndexMap[K, V]) -> Array[K] {
+  self.order.copy()
+}
+
+///|
 /// Iterates over values in insertion order.
 pub fn[K : Hash + Eq, V] IndexMap::values_iter(
   self : IndexMap[K, V],
@@ -529,6 +535,12 @@ pub fn[K : Hash + Eq, V] IndexMap::values_iter(
       None => abort("corrupt indexmap: key in order but not in entries")
     }
   })
+}
+
+///|
+/// Returns an array of all values in insertion order.
+pub fn[K : Hash + Eq, V] IndexMap::values(self : IndexMap[K, V]) -> Array[V] {
+  self.values_iter().to_array()
 }
 
 // ===================== trait impls =====================

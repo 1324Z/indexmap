@@ -293,3 +293,12 @@ test "pop on empty" {
   debug_inspect(m.pop_first(), content="None")
   debug_inspect(m.pop_last(), content="None")
 }
+
+///|
+test "keys and values arrays" {
+  let m = @indexmap.IndexMap::from([("a", 1), ("b", 2), ("c", 3)])
+  let keys = m.keys()
+  debug_inspect(keys, content="[\"a\", \"b\", \"c\"]")
+  let values = m.values()
+  debug_inspect(values, content="[1, 2, 3]")
+}
