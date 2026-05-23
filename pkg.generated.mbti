@@ -1,0 +1,38 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbit-community/indexmap"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+type IndexMap[K, V]
+#alias("_[_]")
+pub fn[K : Hash + Eq, V] IndexMap::at(Self[K, V], K) -> V
+pub fn[K : Hash + Eq, V] IndexMap::contains_key(Self[K, V], K) -> Bool
+pub fn[K : Hash + Eq, V] IndexMap::from(ArrayView[(K, V)]) -> Self[K, V]
+pub fn[K : Hash + Eq, V] IndexMap::get(Self[K, V], K) -> V?
+pub fn[K : Hash + Eq, V] IndexMap::get_index(Self[K, V], Int) -> (K, V)?
+pub fn[K, V] IndexMap::get_index_key(Self[K, V], Int) -> K?
+pub fn[K : Hash + Eq, V] IndexMap::get_index_value(Self[K, V], Int) -> V?
+pub fn[K, V] IndexMap::is_empty(Self[K, V]) -> Bool
+pub fn[K : Hash + Eq, V] IndexMap::iter(Self[K, V]) -> Iter[(K, V)]
+pub fn[K, V] IndexMap::keys_iter(Self[K, V]) -> Iter[K]
+pub fn[K, V] IndexMap::length(Self[K, V]) -> Int
+pub fn[K, V] IndexMap::new() -> Self[K, V]
+pub fn[K : Hash + Eq, V] IndexMap::remove(Self[K, V], K) -> V?
+#alias("_[_]=_")
+pub fn[K : Hash + Eq, V] IndexMap::set(Self[K, V], K, V) -> Unit
+pub fn[K : Hash + Eq, V] IndexMap::values_iter(Self[K, V]) -> Iter[V]
+pub fn[K, V] IndexMap::with_capacity(Int) -> Self[K, V]
+pub impl[K : Hash + Eq, V : Eq] Eq for IndexMap[K, V]
+pub impl[K : Hash + Eq + @debug.Debug, V : @debug.Debug] @debug.Debug for IndexMap[K, V]
+
+// Type aliases
+
+// Traits
+

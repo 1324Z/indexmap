@@ -1,0 +1,9 @@
+{
+  "name": "moonbit-community/indexmap",
+  "version": "0.1.0",
+  "readme": "README.md",
+  "repository": "",
+  "license": "Apache-2.0",
+  "keywords": ["indexmap", "hashmap", "data-structure", "ordered-map"],
+  "description": "An insertion-order-preserving hash map for MoonBit"
+}
