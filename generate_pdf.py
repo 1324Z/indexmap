@@ -1,47 +1,59 @@
 #!/usr/bin/env python3
-"""Generate project declaration PDF for indexmap"""
+"""Generate Chinese project declaration PDF for indexmap"""
 
 from fpdf import FPDF
+import os
 
 class DeclarationPDF(FPDF):
+    def __init__(self):
+        super().__init__()
+        # Add Chinese font
+        self.add_font('MicrosoftYaHei', '', 'C:/Windows/Fonts/msyh.ttc', uni=True)
+        self.add_font('MicrosoftYaHei', 'B', 'C:/Windows/Fonts/msyhbd.ttc', uni=True)
+
     def header(self):
         if self.page_no() == 1:
-            self.set_font('Helvetica', 'B', 16)
-            self.cell(0, 10, 'MoonBit Open Source Software Ecosystem Competition 2026', new_x="LMARGIN", new_y="NEXT", align='C')
-            self.set_font('Helvetica', 'B', 14)
-            self.cell(0, 10, 'Project Declaration', new_x="LMARGIN", new_y="NEXT", align='C')
+            self.set_font('MicrosoftYaHei', 'B', 18)
+            self.cell(0, 12, 'MoonBit 国产基础软件生态开源大赛 2026', new_x="LMARGIN", new_y="NEXT", align='C')
+            self.set_font('MicrosoftYaHei', 'B', 16)
+            self.cell(0, 10, '项目申报书', new_x="LMARGIN", new_y="NEXT", align='C')
             self.ln(5)
 
     def footer(self):
         self.set_y(-15)
-        self.set_font('Helvetica', 'I', 8)
-        self.cell(0, 10, f'Page {self.page_no()}/{{nb}}', align='C')
+        self.set_font('MicrosoftYaHei', '', 8)
+        self.cell(0, 10, f'第 {self.page_no()} 页 / 共 {{nb}} 页', align='C')
 
     def section_title(self, title):
-        self.set_font('Helvetica', 'B', 12)
+        self.set_font('MicrosoftYaHei', 'B', 14)
         self.set_fill_color(230, 230, 230)
-        self.cell(0, 8, title, new_x="LMARGIN", new_y="NEXT", fill=True)
+        self.cell(0, 10, title, new_x="LMARGIN", new_y="NEXT", fill=True)
         self.ln(3)
 
     def subsection_title(self, title):
-        self.set_font('Helvetica', 'B', 11)
-        self.cell(0, 7, title, new_x="LMARGIN", new_y="NEXT")
+        self.set_font('MicrosoftYaHei', 'B', 12)
+        self.cell(0, 8, title, new_x="LMARGIN", new_y="NEXT")
         self.ln(2)
 
     def body_text(self, text):
-        self.set_font('Helvetica', '', 10)
-        self.multi_cell(0, 5, text)
+        self.set_font('MicrosoftYaHei', '', 10)
+        self.multi_cell(0, 6, text)
         self.ln(2)
 
     def bullet_point(self, text):
-        self.set_font('Helvetica', '', 10)
+        self.set_font('MicrosoftYaHei', '', 10)
         x = self.get_x()
-        self.cell(5, 5, '-')
-        self.multi_cell(0, 5, text)
+        self.cell(5, 6, '•')
+        self.multi_cell(0, 6, text)
         self.ln(1)
 
     def code_block(self, code):
-        self.set_font('Courier', '', 9)
+        # Check if code contains Chinese characters
+        has_chinese = any('一' <= c <= '鿿' for c in code)
+        if has_chinese:
+            self.set_font('MicrosoftYaHei', '', 9)
+        else:
+            self.set_font('Courier', '', 9)
         self.set_fill_color(245, 245, 245)
         for line in code.split('\n'):
             self.cell(0, 5, line, new_x="LMARGIN", new_y="NEXT", fill=True)
@@ -49,11 +61,11 @@ class DeclarationPDF(FPDF):
 
     def table_row(self, col1, col2, bold=False):
         if bold:
-            self.set_font('Helvetica', 'B', 10)
+            self.set_font('MicrosoftYaHei', 'B', 10)
         else:
-            self.set_font('Helvetica', '', 10)
-        self.cell(60, 6, col1, border=1)
-        self.cell(0, 6, col2, border=1, new_x="LMARGIN", new_y="NEXT")
+            self.set_font('MicrosoftYaHei', '', 10)
+        self.cell(70, 7, col1, border=1)
+        self.cell(0, 7, col2, border=1, new_x="LMARGIN", new_y="NEXT")
 
 
 def main():
@@ -61,38 +73,37 @@ def main():
     pdf.alias_nb_pages()
     pdf.add_page()
 
-    # Section 1: Direction
-    pdf.section_title('1. Competition Direction')
-    pdf.body_text('Basic Data Structures and Algorithms')
+    # 第一节：参赛方向
+    pdf.section_title('一、参赛方向')
+    pdf.body_text('基础数据结构与算法')
 
-    # Section 2: Project Name
-    pdf.section_title('2. Project Name')
-    pdf.body_text('indexmap - Insertion-Order-Preserving Hash Map')
+    # 第二节：项目名称
+    pdf.section_title('二、项目名称')
+    pdf.body_text('indexmap — 插入顺序保持哈希映射')
 
-    # Section 3: Introduction
-    pdf.section_title('3. Project Introduction')
+    # 第三节：项目简介
+    pdf.section_title('三、项目简介')
     pdf.body_text(
-        'indexmap is an insertion-order-preserving hash map implemented for the MoonBit language. '
-        'It combines the O(1) average lookup efficiency of hash tables with the sequential access '
-        'capability of arrays, while guaranteeing that iteration always maintains insertion order.'
+        'indexmap 是一个为 MoonBit 语言实现的插入顺序保持哈希映射（Insertion-Order-Preserving Hash Map）。'
+        '它结合了哈希表的 O(1) 平均查找效率和数组的顺序访问能力，同时保证迭代时元素始终保持插入顺序。'
     )
 
-    # Section 4: Features
-    pdf.section_title('4. Project Features')
+    # 第四节：项目特色
+    pdf.section_title('四、项目特色')
 
-    pdf.subsection_title('4.1 Core Functionality')
-    pdf.bullet_point('O(1) average time complexity for key-value lookup')
-    pdf.bullet_point('O(1) time complexity for insertion-order index access')
-    pdf.bullet_point('Iteration always in insertion order')
-    pdf.bullet_point('Swap-remove semantics: removal uses swap-remove strategy, keeping internal array compact')
+    pdf.subsection_title('4.1 核心功能')
+    pdf.bullet_point('O(1) 平均时间复杂度的键值查找')
+    pdf.bullet_point('O(1) 时间复杂度的插入顺序索引访问')
+    pdf.bullet_point('迭代始终按插入顺序进行')
+    pdf.bullet_point('Swap-remove 语义：删除操作使用交换-移除策略，保持内部数组紧凑')
 
-    pdf.subsection_title('4.2 Data Structure Design')
-    pdf.body_text('Core design choices:')
-    pdf.bullet_point('Open addressing hash table: Uses linear probing for collision resolution, consistent with MoonBit standard library HashMap')
-    pdf.bullet_point('Separate order array: Maintains insertion order separately, decoupled from hash table')
-    pdf.bullet_point('Key storage strategy: Order array stores keys rather than indices, so rehash operations do not affect order')
+    pdf.subsection_title('4.2 数据结构设计')
+    pdf.body_text('采用以下核心设计：')
+    pdf.bullet_point('开放寻址哈希表：使用线性探测解决冲突，与 MoonBit 标准库 HashMap 一致')
+    pdf.bullet_point('分离的顺序数组：单独维护插入顺序，与哈希表解耦')
+    pdf.bullet_point('键存储策略：顺序数组存储键而非索引，使 rehash 操作不影响顺序')
 
-    pdf.subsection_title('4.3 Implementation Details')
+    pdf.subsection_title('4.3 实现细节')
     pdf.code_block('''struct Slot[K, V] {
   hash : Int
   key : K
@@ -107,150 +118,155 @@ struct IndexMap[K, V] {
   mut size : Int
 }''')
 
-    pdf.bullet_point('Hash table: Uses FixedArray[Slot[K, V]?] to store key-value pairs')
-    pdf.bullet_point('Order array: Uses Array[K] to store keys in insertion order')
-    pdf.bullet_point('Capacity management: Auto-resize with load factor 0.5')
+    pdf.bullet_point('哈希表：使用 FixedArray[Slot[K, V]?] 存储键值对')
+    pdf.bullet_point('顺序数组：使用 Array[K] 按插入顺序存储键')
+    pdf.bullet_point('容量管理：自动扩容，负载因子为 0.5')
 
-    # Section 5: API Design
-    pdf.section_title('5. API Design')
+    # 第五节：API 设计
+    pdf.section_title('五、API 设计')
 
-    pdf.subsection_title('5.1 Constructors')
-    pdf.table_row('Function', 'Description', bold=True)
-    pdf.table_row('IndexMap::new()', 'Create empty map')
-    pdf.table_row('IndexMap::with_capacity(n)', 'Create map with at least n slots')
-    pdf.table_row('IndexMap::from(arr)', 'Create map from array')
-
-    pdf.ln(3)
-    pdf.subsection_title('5.2 Core Operations')
-    pdf.table_row('Method', 'Description', bold=True)
-    pdf.table_row('m.set(key, value)', 'Insert or update')
-    pdf.table_row('m.get(key) -> V?', 'Lookup, returns Option')
-    pdf.table_row('m.at(key) -> V', 'Lookup, panics if missing')
-    pdf.table_row('m.contains_key(key)', 'Key existence check')
-    pdf.table_row('m.remove(key) -> V?', 'Remove and return value')
+    pdf.subsection_title('5.1 构造函数')
+    pdf.table_row('函数', '说明', bold=True)
+    pdf.table_row('IndexMap::new()', '创建空映射')
+    pdf.table_row('IndexMap::with_capacity(n)', '创建至少 n 个槽位的映射')
+    pdf.table_row('IndexMap::from(arr)', '从数组创建映射')
 
     pdf.ln(3)
-    pdf.subsection_title('5.3 Index Access')
-    pdf.table_row('Method', 'Description', bold=True)
-    pdf.table_row('m.get_index(i)', 'Key-value pair at position i')
-    pdf.table_row('m.get_index_key(i)', 'Key at position i')
-    pdf.table_row('m.get_index_value(i)', 'Value at position i')
+    pdf.subsection_title('5.2 核心操作')
+    pdf.table_row('方法', '说明', bold=True)
+    pdf.table_row('m.set(key, value)', '插入或更新')
+    pdf.table_row('m.get(key) -> V?', '查找，返回 Option')
+    pdf.table_row('m.at(key) -> V', '查找，缺失时 panic')
+    pdf.table_row('m.contains_key(key)', '键存在性检查')
+    pdf.table_row('m.remove(key) -> V?', '删除并返回值')
 
     pdf.ln(3)
-    pdf.subsection_title('5.4 Iterators')
-    pdf.table_row('Method', 'Description', bold=True)
-    pdf.table_row('m.iter()', 'Iterate key-value pairs in order')
-    pdf.table_row('m.keys_iter()', 'Iterate keys in order')
-    pdf.table_row('m.values_iter()', 'Iterate values in order')
+    pdf.subsection_title('5.3 索引访问')
+    pdf.table_row('方法', '说明', bold=True)
+    pdf.table_row('m.get_index(i)', '位置 i 的键值对')
+    pdf.table_row('m.get_index_key(i)', '位置 i 的键')
+    pdf.table_row('m.get_index_value(i)', '位置 i 的值')
 
     pdf.ln(3)
-    pdf.subsection_title('5.5 Operators')
-    pdf.bullet_point('m[key] - bracket read (panics if missing)')
-    pdf.bullet_point('m[key] = value - bracket write')
+    pdf.subsection_title('5.4 迭代器')
+    pdf.table_row('方法', '说明', bold=True)
+    pdf.table_row('m.iter()', '按顺序遍历键值对')
+    pdf.table_row('m.keys_iter()', '按顺序遍历键')
+    pdf.table_row('m.values_iter()', '按顺序遍历值')
 
-    # Section 6: Trait Implementation
-    pdf.section_title('6. Trait Implementation')
+    pdf.ln(3)
+    pdf.subsection_title('5.5 运算符')
+    pdf.bullet_point('m[key] — 括号读取（缺失时 panic）')
+    pdf.bullet_point('m[key] = value — 括号写入')
 
-    pdf.subsection_title('6.1 Eq Trait')
-    pdf.body_text('Supports equality comparison between two IndexMaps. Since implemented with hash table, comparison is unordered (maps with same content but different insertion order are equal).')
+    # 第六节：特性实现
+    pdf.section_title('六、特性实现')
 
-    pdf.subsection_title('6.2 Debug Trait')
-    pdf.body_text('Supports debug output, displayed as IndexMap({key: value, ...}) format.')
+    pdf.subsection_title('6.1 Eq 特性')
+    pdf.body_text(
+        '支持两个 IndexMap 的相等性比较。由于使用哈希表实现，比较是无序的'
+        '（不同插入顺序但相同内容的映射相等）。'
+    )
 
-    # Section 7: Test Coverage
-    pdf.section_title('7. Test Coverage')
-    pdf.body_text('The project includes 30 test cases covering:')
-    pdf.bullet_point('Basic CRUD operations (create, read, update, delete)')
-    pdf.bullet_point('Bracket operators (read and write)')
-    pdf.bullet_point('Insertion order preservation')
-    pdf.bullet_point('Swap-remove semantics')
-    pdf.bullet_point('Auto-resize (100 entries)')
-    pdf.bullet_point('Large-scale data correctness (1000 entries)')
-    pdf.bullet_point('String and integer keys')
-    pdf.bullet_point('Duplicate key handling')
-    pdf.bullet_point('Eq trait')
-    pdf.bullet_point('Empty map iteration')
+    pdf.subsection_title('6.2 Debug 特性')
+    pdf.body_text('支持调试输出，显示为 IndexMap({key: value, ...}) 格式。')
 
-    pdf.body_text('Test result: Total tests: 30, passed: 30, failed: 0.')
+    # 第七节：测试覆盖
+    pdf.section_title('七、测试覆盖')
+    pdf.body_text('项目包含 30 个测试用例，覆盖：')
+    pdf.bullet_point('基本 CRUD 操作（创建、读取、更新、删除）')
+    pdf.bullet_point('括号运算符（读取和写入）')
+    pdf.bullet_point('插入顺序保持')
+    pdf.bullet_point('Swap-remove 语义')
+    pdf.bullet_point('自动扩容（100 个条目）')
+    pdf.bullet_point('大规模数据正确性（1000 个条目）')
+    pdf.bullet_point('字符串和整数键')
+    pdf.bullet_point('重复键处理')
+    pdf.bullet_point('Eq 特性')
+    pdf.bullet_point('空映射迭代')
 
-    # Section 8: Usage Example
-    pdf.section_title('8. Usage Example')
+    pdf.body_text('测试结果：共 30 个测试，全部通过，0 个失败。')
+
+    # 第八节：使用示例
+    pdf.section_title('八、使用示例')
     pdf.code_block('''test {
-  // Create and populate
+  // 创建并填充
   let m = @indexmap.IndexMap::from([("b", 2), ("a", 1), ("c", 3)])
 
-  // Key lookup - O(1)
+  // 键查找 — O(1)
   assert_eq(m.get("a"), Some(1))
-  assert_eq(m["b"], 2)  // panics if missing
+  assert_eq(m["b"], 2)  // 缺失时 panic
 
-  // Iteration preserves insertion order
+  // 迭代保持插入顺序
   let keys = m.keys_iter().to_array()  // ["b", "a", "c"]
 
-  // Index access
+  // 索引访问
   assert_eq(m.get_index_key(0), Some("b"))
   assert_eq(m.get_index(1), Some(("a", 1)))
 
-  // Update (keeps original position)
+  // 更新（保持原始位置）
   m.set("a", 99)
-  // still: ["b", "a", "c"], but m["a"] == 99
+  // 仍然: ["b", "a", "c"], 但 m["a"] == 99
 
-  // Remove
+  // 删除
   assert_eq(m.remove("a"), Some(99))
-  // now: ["b", "c"]
+  // 现在: ["b", "c"]
 }''')
 
-    # Section 9: Installation
-    pdf.section_title('9. Installation')
+    # 第九节：安装方式
+    pdf.section_title('九、安装方式')
     pdf.code_block('moon add moonbit-community/indexmap')
-    pdf.body_text('Then import in your .mbt files:')
+    pdf.body_text('然后在 .mbt 文件中导入：')
     pdf.code_block('let m = @indexmap.IndexMap::new()')
 
-    # Section 10: Project Structure
-    pdf.section_title('10. Project Structure')
+    # 第十节：项目结构
+    pdf.section_title('十、项目结构')
     pdf.code_block('''indexmap/
   .github/workflows/ci.yml  # GitHub Actions CI
-  indexmap.mbt               # Main implementation file
-  indexmap_test.mbt          # Test file
-  moon.mod.json              # Module metadata
-  moon.pkg                   # Package dependencies
-  README.md                  # English documentation
-  DECLARATION.md             # Project declaration
-  LICENSE                    # Apache-2.0 license''')
+  indexmap.mbt               # 主实现文件
+  indexmap_test.mbt          # 测试文件
+  moon.mod.json              # 模块元数据
+  moon.pkg                   # 包依赖
+  README.md                  # 英文文档
+  DECLARATION.md             # 项目申报书
+  DECLARATION.pdf            # 项目申报书 PDF
+  LICENSE                    # Apache-2.0 许可证''')
 
-    # Section 11: Technical Highlights
-    pdf.section_title('11. Technical Highlights')
-    pdf.bullet_point('Consistent design with standard library: Uses same open addressing + linear probing strategy as MoonBit standard library HashMap')
-    pdf.bullet_point('Efficient memory layout: Uses FixedArray for hash table, memory contiguous')
-    pdf.bullet_point('Smart resize strategy: Load factor 0.5, balancing space and performance')
-    pdf.bullet_point('Type safety: Complete generic support, compile-time type checking')
-    pdf.bullet_point('Idiomatic MoonBit syntax: Uses #alias for operator overloading, guard pattern matching, etc.')
+    # 第十一节：技术亮点
+    pdf.section_title('十一、技术亮点')
+    pdf.bullet_point('与标准库一致的设计：采用与 MoonBit 标准库 HashMap 相同的开放寻址 + 线性探测策略')
+    pdf.bullet_point('高效的内存布局：使用 FixedArray 存储哈希表，内存连续')
+    pdf.bullet_point('智能扩容策略：负载因子 0.5，平衡空间和性能')
+    pdf.bullet_point('类型安全：完整的泛型支持，编译时类型检查')
+    pdf.bullet_point('MoonBit 惯用语法：使用 #alias 实现运算符重载，guard 模式匹配等')
 
-    # Section 12: Future Extensions
-    pdf.section_title('12. Future Extensions')
-    pdf.bullet_point('Entry API (entry(key).or_insert(default))')
-    pdf.bullet_point('Ordered iteration (sorted order)')
-    pdf.bullet_point('Serialization/deserialization support')
-    pdf.bullet_point('Thread-safe version')
-    pdf.bullet_point('More set operations (union, intersection, difference)')
+    # 第十二节：未来扩展
+    pdf.section_title('十二、未来扩展')
+    pdf.bullet_point('Entry API（entry(key).or_insert(default)）')
+    pdf.bullet_point('有序迭代（按排序顺序）')
+    pdf.bullet_point('序列化/反序列化支持')
+    pdf.bullet_point('并发安全版本')
+    pdf.bullet_point('更多集合操作（union, intersection, difference）')
 
-    # Section 13: License
-    pdf.section_title('13. License')
+    # 第十三节：许可证
+    pdf.section_title('十三、许可证')
     pdf.body_text('Apache-2.0')
 
-    # Section 14: Contact
-    pdf.section_title('14. Contact')
-    pdf.bullet_point('Project URL: https://gitlink.org.cn/yangayang/indexmap')
-    pdf.bullet_point('Issue tracking: GitLink Issues')
+    # 第十四节：联系方式
+    pdf.section_title('十四、联系方式')
+    pdf.bullet_point('项目地址：https://gitlink.org.cn/yangayang/indexmap')
+    pdf.bullet_point('问题反馈：GitLink Issues')
 
-    # Footer
+    # 页脚
     pdf.ln(10)
-    pdf.set_font('Helvetica', 'I', 9)
-    pdf.cell(0, 5, 'This project participates in MoonBit Open Source Software Ecosystem Competition 2026', align='C', new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 5, 'Direction: Basic Data Structures and Algorithms', align='C')
+    pdf.set_font('MicrosoftYaHei', '', 9)
+    pdf.cell(0, 6, '本项目参加 MoonBit 国产基础软件生态开源大赛 2026', align='C', new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(0, 6, '方向：基础数据结构与算法', align='C')
 
-    # Save PDF
-    pdf.output('E:/moonbit/indexmap/DECLARATION.pdf')
-    print('PDF generated successfully: E:/moonbit/indexmap/DECLARATION.pdf')
+    # 保存 PDF
+    output_path = 'E:/moonbit/indexmap/DECLARATION_NEW.pdf'
+    pdf.output(output_path)
+    print(f'PDF 生成成功: {output_path}')
 
 
 if __name__ == '__main__':
