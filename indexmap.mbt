@@ -591,3 +591,14 @@ pub impl[K : Hash + Eq + Debug, V : Debug] Debug for IndexMap[K, V] with fn to_r
     .map(kv => (@debug.to_repr(kv.0), @debug.to_repr(kv.1)))
   Repr::opaque_("IndexMap", Repr::map(entries))
 }
+
+///|
+pub impl[K : Hash + Eq, V : Hash] Hash for IndexMap[K, V] with hash_combine(
+  self : IndexMap[K, V],
+  hasher : Hasher,
+) -> Unit {
+  for kv in self {
+    hasher.combine(kv.0.hash())
+    hasher.combine(kv.1.hash())
+  }
+}
