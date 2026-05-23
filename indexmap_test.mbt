@@ -275,3 +275,21 @@ test "first and last on empty" {
   debug_inspect(m.first_key(), content="None")
   debug_inspect(m.last_key(), content="None")
 }
+
+///|
+test "pop_first and pop_last" {
+  let m = @indexmap.IndexMap::from([("a", 1), ("b", 2), ("c", 3)])
+  debug_inspect(m.pop_first(), content="Some((\"a\", 1))")
+  assert_eq(m.length(), 2)
+  // After removing "a" (swap-remove), order becomes ["c", "b"]
+  debug_inspect(m.pop_last(), content="Some((\"b\", 2))")
+  assert_eq(m.length(), 1)
+  debug_inspect(m.first_key(), content="Some(\"c\")")
+}
+
+///|
+test "pop on empty" {
+  let m : @indexmap.IndexMap[Int, Int] = @indexmap.IndexMap::new()
+  debug_inspect(m.pop_first(), content="None")
+  debug_inspect(m.pop_last(), content="None")
+}

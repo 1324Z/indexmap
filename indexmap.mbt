@@ -464,6 +464,36 @@ pub fn[K, V] IndexMap::last_key(self : IndexMap[K, V]) -> K? {
   }
 }
 
+///|
+/// Removes and returns the first key-value pair in insertion order.
+pub fn[K : Hash + Eq, V] IndexMap::pop_first(self : IndexMap[K, V]) -> (K, V)? {
+  match self.first_key() {
+    None => None
+    Some(key) => {
+      let value = self.remove(key)
+      match value {
+        None => None
+        Some(v) => Some((key, v))
+      }
+    }
+  }
+}
+
+///|
+/// Removes and returns the last key-value pair in insertion order.
+pub fn[K : Hash + Eq, V] IndexMap::pop_last(self : IndexMap[K, V]) -> (K, V)? {
+  match self.last_key() {
+    None => None
+    Some(key) => {
+      let value = self.remove(key)
+      match value {
+        None => None
+        Some(v) => Some((key, v))
+      }
+    }
+  }
+}
+
 // ===================== iteration =====================
 
 ///|
