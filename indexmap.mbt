@@ -233,7 +233,18 @@ pub fn[K : Hash + Eq, V] IndexMap::contains_key(
   self : IndexMap[K, V],
   key : K,
 ) -> Bool {
-  self.get(key) is Some(_)
+  let hash = key.hash()
+  for i = 0, idx = hash & self.capacity_mask {
+    match self.entries[idx] {
+      None => break false
+      Some(slot) =>
+        if slot.hash == hash && slot.key == key {
+          break true
+        } else {
+          continue i + 1, (idx + 1) & self.capacity_mask
+        }
+    }
+  }
 }
 
 ///|
