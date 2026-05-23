@@ -230,3 +230,13 @@ test "empty map iter" {
   assert_eq(m.keys_iter().count(), 0)
   assert_eq(m.values_iter().count(), 0)
 }
+
+///|
+test "clear" {
+  let m = @indexmap.IndexMap::from([("a", 1), ("b", 2), ("c", 3)])
+  assert_eq(m.length(), 3)
+  m.clear()
+  assert_true(m.is_empty())
+  assert_eq(m.length(), 0)
+  debug_inspect(m.get("a"), content="None")
+}

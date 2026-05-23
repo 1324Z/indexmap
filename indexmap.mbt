@@ -336,6 +336,16 @@ pub fn[K, V] IndexMap::is_empty(self : IndexMap[K, V]) -> Bool {
 }
 
 ///|
+/// Removes all entries from the map.
+pub fn[K, V] IndexMap::clear(self : IndexMap[K, V]) -> Unit {
+  for i in 0..<self.capacity {
+    self.entries[i] = None
+  }
+  self.order.clear()
+  self.size = 0
+}
+
+///|
 /// Returns the key-value pair at the given insertion-order index.
 ///
 /// ```mbt check
