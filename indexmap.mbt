@@ -237,6 +237,26 @@ pub fn[K : Hash + Eq, V] IndexMap::contains_key(
 }
 
 ///|
+/// Returns a mutable reference to the value associated with `key`.
+pub fn[K : Hash + Eq, V] IndexMap::get_mut(
+  self : IndexMap[K, V],
+  key : K,
+) -> V? {
+  let hash = key.hash()
+  for i = 0, idx = hash & self.capacity_mask {
+    match self.entries[idx] {
+      None => break None
+      Some(slot) =>
+        if slot.hash == hash && slot.key == key {
+          break Some(slot.value)
+        } else {
+          continue i + 1, (idx + 1) & self.capacity_mask
+        }
+    }
+  }
+}
+
+///|
 /// Removes a key from the map, returning its value if present.
 /// Uses swap-remove semantics: the removed entry is replaced by the last
 /// entry in iteration order.

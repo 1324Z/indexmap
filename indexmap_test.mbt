@@ -240,3 +240,10 @@ test "clear" {
   assert_eq(m.length(), 0)
   debug_inspect(m.get("a"), content="None")
 }
+
+///|
+test "get_mut" {
+  let m = @indexmap.IndexMap::from([("a", 1), ("b", 2)])
+  debug_inspect(m.get_mut("a"), content="Some(1)")
+  debug_inspect(m.get_mut("z"), content="None")
+}
